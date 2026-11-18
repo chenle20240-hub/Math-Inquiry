@@ -1,0 +1,4 @@
+{"id": "DEMO-K01", "origin": "original_demo", "title": "等式同除与分类", "condition": "两边同除必须先保证除数不为零。", "thought": "分类讨论", "action": "除数含未知数时，先把零与非零分开，各检验一次。"}
+{"id": "DEMO-K02", "origin": "original_demo", "title": "分式与原定义域", "condition": "分母非零；化简的等价性只针对原定义域。", "thought": "等价变形", "action": "先圈出原分母的零点，再核对约去的因式有没有藏起限制。"}
+{"id": "DEMO-K03", "origin": "original_demo", "title": "函数模型与边界", "condition": "恒定流量、无流出，且只研究从开始到首次装满的过程。", "thought": "数学建模", "action": "为变量写单位，算端点，再问区间以外是否仍有依据。"}
+{"id": "DEMO-K04", "origin": "original_demo", "title": "代数表示与取等", "condition": "平方项非负不等于最小值一定可取；取等点必须可行。", "thought": "转化与表示", "action": "先写目标，选择乘积式或平方形式，再在给定范围检验取等点。"}

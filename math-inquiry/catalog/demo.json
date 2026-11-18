@@ -1,0 +1,136 @@
+{
+  "concepts": [
+    {
+      "id": "DEMO-K01",
+      "origin": "original_demo",
+      "title": "等式同除与分类",
+      "condition": "两边同除必须先保证除数不为零。",
+      "thought": "分类讨论",
+      "action": "除数含未知数时，先把零与非零分开，各检验一次。"
+    },
+    {
+      "id": "DEMO-K02",
+      "origin": "original_demo",
+      "title": "分式与原定义域",
+      "condition": "分母非零；化简的等价性只针对原定义域。",
+      "thought": "等价变形",
+      "action": "先圈出原分母的零点，再核对约去的因式有没有藏起限制。"
+    },
+    {
+      "id": "DEMO-K03",
+      "origin": "original_demo",
+      "title": "函数模型与边界",
+      "condition": "恒定流量、无流出，且只研究从开始到首次装满的过程。",
+      "thought": "数学建模",
+      "action": "为变量写单位，算端点，再问区间以外是否仍有依据。"
+    },
+    {
+      "id": "DEMO-K04",
+      "origin": "original_demo",
+      "title": "代数表示与取等",
+      "condition": "平方项非负不等于最小值一定可取；取等点必须可行。",
+      "thought": "转化与表示",
+      "action": "先写目标，选择乘积式或平方形式，再在给定范围检验取等点。"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "DEMO-A01",
+      "origin": "original_demo",
+      "scene": "A",
+      "title": "检查一步除法",
+      "problem": "实数范围内解 x² = 4x。我两边除以 x 得到 x=4，不确定这一步是否总成立。",
+      "start": "先看我的这一步，让我亲自检验。提示后还不会时，请示范关键一步，再让我继续。",
+      "solution": "若 x=0，代回成立；若 x≠0，除以 x 得 x=4。也可移项得到 x(x−4)=0，两个解都满足原式。"
+    },
+    {
+      "id": "DEMO-B01",
+      "origin": "original_demo",
+      "scene": "B",
+      "title": "分式独立自查",
+      "problem": "化简 (x²−9)/(x−3)，并写出原式有意义的条件。",
+      "start": "让我先写完整第一稿，不要提前给公式、提示或答案。",
+      "solution": "原分母要求 x≠3；在此条件下，(x−3)(x+3)/(x−3)=x+3。简式在 3 有值，不能据此扩充原式定义域。"
+    },
+    {
+      "id": "DEMO-B01-TRANSFER",
+      "origin": "original_demo",
+      "scene": "B",
+      "title": "分式迁移",
+      "problem": "化简 (x²−16)/(x²−4x)，写出原式有意义的条件。",
+      "start": "第一题核对后，换这道新题。先等我独立写完。",
+      "solution": "原分母 x(x−4)≠0，所以 x≠0 且 x≠4；分子为 (x−4)(x+4)，原定义域内化简为 (x+4)/x。"
+    },
+    {
+      "id": "DEMO-C01",
+      "origin": "original_demo",
+      "scene": "C",
+      "title": "装水到什么时候",
+      "problem": "容器起始 4 升，容量 19 升，每分钟匀速注入 3 升，不出水、不漏水，只研究开始注水到首次装满（含两端）。",
+      "start": "先让我算 0、1、2 分钟的水量，再讨论变量和模型，留一个值得带回课堂的问题。",
+      "solution": "水量依次为 4、7、10 升。t 以分钟计，V 以升计，V=4+3t；t=2.5 时为 11.5 升。4+3t=19 得 t=5，故 0≤t≤5，允许非整数；不能用本模型推断装满之后。"
+    },
+    {
+      "id": "DEMO-D01",
+      "origin": "original_demo",
+      "scene": "D",
+      "title": "同一个式子，两种目标",
+      "problem": "设 p=x²−6x+8，x 为实数。求 p=0 时的 x；再求 p 的最小值和取等时的 x。",
+      "start": "先让我选择一问，完成一次变形，说明为什么这种写法有用。也接受别的有依据的方法。",
+      "solution": "求零点用 p=(x−2)(x−4)，得 x=2 或 4。求最小值用 p=(x−3)²−1≥−1，且 x=3 能取等。"
+    },
+    {
+      "id": "DEMO-D01-RESTRICTED",
+      "origin": "original_demo",
+      "scene": "D",
+      "title": "改变允许的范围",
+      "problem": "对 p=x²−6x+8，改为 0≤x≤2。最小值如何变化？给出对整个区间成立的理由。",
+      "start": "等我判断原先取等的 x 是否仍在范围内。不要用几个样本点代替证明。",
+      "solution": "0≤x≤2 时 1≤3−x≤3，所以 (x−3)²≥1，p≥0；x=2 取等。全实数上的最小值 −1 在新区间不可取。"
+    }
+  ],
+  "links": [
+    {
+      "id": "DEMO-R01",
+      "origin": "original_demo",
+      "task": "DEMO-A01",
+      "concept": "DEMO-K01",
+      "reason": "看到除数含未知数，检验是否会漏掉零解。"
+    },
+    {
+      "id": "DEMO-R02",
+      "origin": "original_demo",
+      "task": "DEMO-B01",
+      "concept": "DEMO-K02",
+      "reason": "化简结果与取值限制分开检查。"
+    },
+    {
+      "id": "DEMO-R03",
+      "origin": "original_demo",
+      "task": "DEMO-B01-TRANSFER",
+      "concept": "DEMO-K02",
+      "reason": "检查新题中被约掉的限制能否独立保留。"
+    },
+    {
+      "id": "DEMO-R04",
+      "origin": "original_demo",
+      "task": "DEMO-C01",
+      "concept": "DEMO-K03",
+      "reason": "把一次关系式放回情境检查端点。"
+    },
+    {
+      "id": "DEMO-R05",
+      "origin": "original_demo",
+      "task": "DEMO-D01",
+      "concept": "DEMO-K04",
+      "reason": "选择表示时同时看目标和取等条件。"
+    },
+    {
+      "id": "DEMO-R06",
+      "origin": "original_demo",
+      "task": "DEMO-D01-RESTRICTED",
+      "concept": "DEMO-K04",
+      "reason": "区间改变后，重新检验界是否可达。"
+    }
+  ]
+}

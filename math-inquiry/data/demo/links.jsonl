@@ -1,0 +1,6 @@
+{"id": "DEMO-R01", "origin": "original_demo", "task": "DEMO-A01", "concept": "DEMO-K01", "reason": "看到除数含未知数，检验是否会漏掉零解。"}
+{"id": "DEMO-R02", "origin": "original_demo", "task": "DEMO-B01", "concept": "DEMO-K02", "reason": "化简结果与取值限制分开检查。"}
+{"id": "DEMO-R03", "origin": "original_demo", "task": "DEMO-B01-TRANSFER", "concept": "DEMO-K02", "reason": "检查新题中被约掉的限制能否独立保留。"}
+{"id": "DEMO-R04", "origin": "original_demo", "task": "DEMO-C01", "concept": "DEMO-K03", "reason": "把一次关系式放回情境检查端点。"}
+{"id": "DEMO-R05", "origin": "original_demo", "task": "DEMO-D01", "concept": "DEMO-K04", "reason": "选择表示时同时看目标和取等条件。"}
+{"id": "DEMO-R06", "origin": "original_demo", "task": "DEMO-D01-RESTRICTED", "concept": "DEMO-K04", "reason": "区间改变后，重新检验界是否可达。"}

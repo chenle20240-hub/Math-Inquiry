@@ -1,0 +1,37 @@
+{
+  "date": "2026-11-18",
+  "scope": "private V1.1 reconstruction and original README queries; no student/model evaluations",
+  "queries": [
+    9,
+    2,
+    1,
+    7,
+    1,
+    1,
+    17
+  ],
+  "tables_and_views": {
+    "books": 6,
+    "chapters": 34,
+    "sections": 98,
+    "structure": 356,
+    "concepts": 222,
+    "examples": 323,
+    "relationships": 254,
+    "occurrences": 798,
+    "issues": 7,
+    "example_concepts": 456,
+    "concept_topics": 243,
+    "verified_examples": 307,
+    "chapter_concepts": 259,
+    "prerequisites": 228,
+    "exam_papers": 11,
+    "exam_questions": 310,
+    "exam_knowledge_links": 452,
+    "concept_exams": 452,
+    "checked_exam_questions": 21,
+    "exam_textbook_examples": 1079
+  },
+  "input_files_unchanged": 15,
+  "db_sha256": "f5e06fc505ff11dd27a0d75dbbeefe60f9521fdc1649bf3b8955edcad8aa885b"
+}

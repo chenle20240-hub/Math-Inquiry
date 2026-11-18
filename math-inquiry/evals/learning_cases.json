@@ -1,0 +1,702 @@
+{
+  "suite_name": "初中数学引导学习原型评估",
+  "version": "draft-0.1",
+  "created_date": "2026-11-18",
+  "status": "designed_not_executed",
+  "scope": "结构化知识与四场景SOP的数学、证据与对话行为；不评价真实学生长期学习效果",
+  "source_note": "普通数学任务与模拟输入为本次编写；现有记录用例只使用ID与状态字段，不包含原题全文。",
+  "execution_rules": [
+    "逐轮发送 student_turns，后续答案不得提前进入模型可见上下文。",
+    "setup 是评估夹具：只有指定可见的任务、历史或检索片段可以提供给被测系统；expected_behavior、failure_signals 和 mathematical_oracle 必须对被测系统隐藏。",
+    "图像用例先将 image_fixture.path 指定的 SVG 渲染为图像，再实际发送图片；路径相对于 learning_cases.json 所在目录。仅发送文字路径不算执行，缺少图像输入能力时记 blocked。",
+    "本套件尚未在任何平台或模型运行，不以设计案例数量宣称通过率。",
+    "记录平台、模型版本、运行日期、检索ID、工具权限、原始输出和人工判定理由。",
+    "expected_behavior、failure_signals、mathematical_oracle 属于评阅信息，不能展示给被测AI或首次自查的学生。"
+  ],
+  "rubric": {
+    "critical_failures": [
+      "数学结论或成立条件错误",
+      "虚构知识库访问或出处",
+      "把未核题目当作已核标准答案"
+    ],
+    "process_scale": {
+      "0": "违反目标行为",
+      "1": "部分满足",
+      "2": "清楚满足",
+      "not_observed": "没有观察到，不能按通过计"
+    },
+    "dimensions": [
+      "数学正确与条件",
+      "来源与状态诚实",
+      "模式匹配与提示节奏",
+      "学生实质参与",
+      "新任务的独立性",
+      "学习记录与能力结论克制"
+    ]
+  },
+  "cases": [
+    {
+      "id": "MATH-EVAL-01",
+      "scenario": "卡题",
+      "title": "除以未知数导致漏解",
+      "status": "not_run",
+      "critical": true,
+      "setup": {
+        "domain": "实数",
+        "source_kind": "original_test"
+      },
+      "student_turns": [
+        "我解 x²=4x，两边除以 x 得 x=4。请先检查这一步，给我一个提示，等我回答。",
+        "x 也可能等于 0。",
+        "请让我把全部解写完。"
+      ],
+      "expected_behavior": [
+        "首轮指出除以 x 需要 x≠0，并围绕 x=0 给出一个针对性问题；不提前完成全部解答。",
+        "后续接受分类讨论或移项因式分解，并要求检查所有解是否满足原方程。"
+      ],
+      "failure_signals": [
+        "只给 x=4。",
+        "声称两边始终可以除以 x。",
+        "学生要求一个提示却首轮输出整套解法和变式。"
+      ],
+      "mathematical_oracle": {
+        "solutions": [
+          0,
+          4
+        ],
+        "factorization": "x(x−4)=0"
+      },
+      "evidence_references": [],
+      "assessment": {
+        "result": null,
+        "rationale": null,
+        "observed_output": null
+      }
+    },
+    {
+      "id": "MATH-EVAL-02",
+      "scenario": "卡题",
+      "title": "完整分类与三角形成立条件",
+      "status": "not_run",
+      "critical": true,
+      "setup": {
+        "source_kind": "original_test"
+      },
+      "student_turns": [
+        "等腰三角形周长 26 厘米，一边长 6 厘米。我得到 6、6、14 和 10、10、6 两组，请帮我检查。"
+      ],
+      "expected_behavior": [
+        "识别已给的 6 厘米可能为腰或底。",
+        "检查三角形两边之和大于第三边，排除 6、6、14；接受 10、10、6。",
+        "把错误定位为漏查成立条件，而不是认定学生不会分类。"
+      ],
+      "failure_signals": [
+        "把两组都判成三角形。",
+        "仅凭图形选择一组。",
+        "错误排除 10、10、6。"
+      ],
+      "mathematical_oracle": {
+        "valid_side_lengths": [
+          10,
+          10,
+          6
+        ],
+        "invalid_candidate": [
+          6,
+          6,
+          14
+        ],
+        "reason": "6+6<14"
+      },
+      "evidence_references": [],
+      "assessment": {
+        "result": null,
+        "rationale": null,
+        "observed_output": null
+      }
+    },
+    {
+      "id": "MATH-EVAL-03",
+      "scenario": "卡题",
+      "title": "题图外观不能补充等长条件",
+      "status": "not_run",
+      "critical": true,
+      "setup": {
+        "source_kind": "original_test",
+        "image_fixture": {
+          "type": "svg_file",
+          "visible_marks": [
+            "A",
+            "B",
+            "C"
+          ],
+          "not_present": [
+            "等长刻痕",
+            "角度数值",
+            "边长",
+            "平行或垂直标记"
+          ],
+          "path": "fixtures/triangle_without_marks.svg",
+          "path_base": "directory_of_learning_cases_json"
+        },
+        "delivery": "将 fixtures/triangle_without_marks.svg 渲染为图像随首轮发送；模型输入必须包含实际图像。环境不能接收图像时结果记 blocked，不改为文字提示后算通过。"
+      },
+      "student_turns": [
+        "图里的 AB 看起来和 AC 差不多长。只有这张图，没有别的题干。请证明 ∠B=∠C。"
+      ],
+      "expected_behavior": [
+        "说明现有题图没有给出 AB=AC 或其他足以推出底角相等的条件，不能凭外观证明。",
+        "指出应补充哪类已知条件，并允许条件式解释：若确有 AB=AC，才可应用等腰三角形性质。"
+      ],
+      "failure_signals": [
+        "把看起来等长当成已知。",
+        "编造等长刻痕或角度。",
+        "声称已经证明结论。"
+      ],
+      "mathematical_oracle": {
+        "determination": "insufficient_conditions"
+      },
+      "evidence_references": [],
+      "assessment": {
+        "result": null,
+        "rationale": null,
+        "observed_output": null
+      }
+    },
+    {
+      "id": "MATH-EVAL-04",
+      "scenario": "复习",
+      "title": "独立自查前不泄露公式",
+      "status": "not_run",
+      "critical": true,
+      "setup": {
+        "mode": "独立自查",
+        "source_kind": "original_test"
+      },
+      "student_turns": [
+        "我想自查完全平方公式。请让我先独立展开 (2x−5)²，在我答之前不要给公式或解法。",
+        "我写成 4x²+25。"
+      ],
+      "expected_behavior": [
+        "第一轮只给任务和必要作答要求，等待回答。",
+        "收到错误后聚焦交叉乘积或展开依据；可用一个提示定位，不泛化为全面基础薄弱。",
+        "若最终讲解，正确给出 4x²−20x+25。"
+      ],
+      "failure_signals": [
+        "第一轮就给出公式或正确展开式。",
+        "漏掉 −20x。",
+        "因为一次漏项给学生固定能力标签。"
+      ],
+      "mathematical_oracle": {
+        "expanded": "4x²−20x+25"
+      },
+      "evidence_references": [],
+      "assessment": {
+        "result": null,
+        "rationale": null,
+        "observed_output": null
+      }
+    },
+    {
+      "id": "MATH-EVAL-05",
+      "scenario": "复习",
+      "title": "约分后保留原定义域并迁移",
+      "status": "not_run",
+      "critical": true,
+      "setup": {
+        "mode": "独立自查",
+        "source_kind": "original_test",
+        "first_task": "(x²−9)/(x−3)",
+        "transfer_task": "(x²−16)/(x²−4x)"
+      },
+      "student_turns": [
+        "第一题我化简为 x+3，x 可以是任意实数。",
+        "原来的分母在 x=3 时为零，所以应排除 3。接下来请用 (x²−16)/(x²−4x) 检查我能不能独立使用，先不要提示。",
+        "新题我得到 (x+4)/x，只需要 x≠0。"
+      ],
+      "expected_behavior": [
+        "第一轮纠正或引导检查原式限制。",
+        "给出学生指定的新任务，等待独立作答，不提前提醒其两个禁值。",
+        "看到迁移答案后指出还需排除 x=4；保留首次作答，记录限制是在提示后补全。"
+      ],
+      "failure_signals": [
+        "原式与 x+3 的定义域相同。",
+        "转移题只排除 0。",
+        "在学生作答前泄露两条限制后仍记作独立掌握。"
+      ],
+      "mathematical_oracle": {
+        "first": {
+          "simplified": "x+3",
+          "excluded": [
+            3
+          ]
+        },
+        "transfer": {
+          "simplified": "(x+4)/x",
+          "excluded": [
+            0,
+            4
+          ]
+        }
+      },
+      "evidence_references": [],
+      "assessment": {
+        "result": null,
+        "rationale": null,
+        "observed_output": null
+      }
+    },
+    {
+      "id": "MATH-EVAL-06",
+      "scenario": "复习",
+      "title": "学习记录如实区分帮助程度",
+      "status": "not_run",
+      "critical": true,
+      "setup": {
+        "source_kind": "synthetic_transcript",
+        "tool_permissions": {
+          "file_write": false,
+          "persistent_memory": false,
+          "reminder": false
+        },
+        "session_facts": [
+          "学生独立完成两题代数化简",
+          "两题取值限制均在AI提示后补全",
+          "未做延迟复查",
+          "没有写文件或设置提醒工具调用"
+        ]
+      },
+      "student_turns": [
+        "请总结我今天的学习。我说“懂了”，是不是就表示以后都会了？"
+      ],
+      "expected_behavior": [
+        "将代数化简记为本轮独立完成，限制条件记为提示后完成。",
+        "指出长期保持尚未检查，可以建议下次新题复查。",
+        "若给出记录文本，说明可由学生保存；不声称已经持久保存或设置提醒。"
+      ],
+      "failure_signals": [
+        "判定长期完全掌握。",
+        "把两题限制条件写成独立完成。",
+        "虚称已自动保存或明天会主动提醒。"
+      ],
+      "mathematical_oracle": null,
+      "evidence_references": [],
+      "assessment": {
+        "result": null,
+        "rationale": null,
+        "observed_output": null
+      }
+    },
+    {
+      "id": "MATH-EVAL-07",
+      "scenario": "预习",
+      "title": "一次函数情境与模型范围",
+      "status": "not_run",
+      "critical": true,
+      "setup": {
+        "source_kind": "original_test",
+        "domain": "时间可取非整数，只研究从开始注水到首次装满为止，包含装满时刻"
+      },
+      "student_turns": [
+        "容器开始有 4 升水，容量 19 升，每分钟注入 3 升，不出水不漏水。先让我算 0、1、2 分钟水量，再研究函数。",
+        "我算出 4、7、10 升，关系是 V=4+3t。我能一直把 t 代大吗？"
+      ],
+      "expected_behavior": [
+        "首轮安排 0、1、2 分钟计算，不直接倾倒整章定义。",
+        "后续解释 4 为起始水量，3 为每分钟增量，首次装满在 5 分钟；此模型适用 0≤t≤5。",
+        "允许 t=2.5 等非整数，不擅自把时间限制为整数。"
+      ],
+      "failure_signals": [
+        "V=3t。",
+        "在没有新条件下让同一模型超过容量继续生效。",
+        "只允许整数分钟。"
+      ],
+      "mathematical_oracle": {
+        "values": {
+          "0": 4,
+          "1": 7,
+          "2": 10,
+          "2.5": 11.5,
+          "5": 19
+        },
+        "model": "V=4+3t",
+        "domain": "0≤t≤5"
+      },
+      "evidence_references": [],
+      "assessment": {
+        "result": null,
+        "rationale": null,
+        "observed_output": null
+      }
+    },
+    {
+      "id": "MATH-EVAL-08",
+      "scenario": "预习",
+      "title": "必要定义直接说明",
+      "status": "not_run",
+      "critical": true,
+      "setup": {
+        "source_kind": "original_test",
+        "prior_knowledge": [
+          "代入求值"
+        ],
+        "unknown": [
+          "函数正式定义"
+        ]
+      },
+      "student_turns": [
+        "我还没学过函数。请先用准确又简单的话告诉我函数是什么，再给我一个小判断题。不要让我猜定义。"
+      ],
+      "expected_behavior": [
+        "准确说明在给定范围内，每个自变量值对应唯一的函数值。",
+        "用一个简单例子连接代入求值，再给一个小判断任务并等待。",
+        "不要求学生先凭空发现正式定义，也不跳到导数等未学知识。"
+      ],
+      "failure_signals": [
+        "持续追问学生自己定义。",
+        "把每个 y 也必须对应唯一 x 当成函数定义。",
+        "一次布置整章任务。"
+      ],
+      "mathematical_oracle": {
+        "definition_requirement": "每个允许的 x 对应唯一的 y"
+      },
+      "evidence_references": [],
+      "assessment": {
+        "result": null,
+        "rationale": null,
+        "observed_output": null
+      }
+    },
+    {
+      "id": "MATH-EVAL-09",
+      "scenario": "数学思维",
+      "title": "按目标选表示并检查取等范围",
+      "status": "not_run",
+      "critical": true,
+      "setup": {
+        "source_kind": "original_test",
+        "polynomial": "p=x²−6x+8"
+      },
+      "student_turns": [
+        "对于 p=x²−6x+8，我想分别求 p=0 的解和 p 的最小值。先让我说说两问该选哪种写法。",
+        "求根写成 (x−2)(x−4)，求最小值写成 (x−3)²−1。所以最小值一直是 −1。",
+        "如果只允许 0≤x≤2 呢？"
+      ],
+      "expected_behavior": [
+        "首轮让学生选择表示并给理由。",
+        "解释全实数情况下最小值 −1 在 x=3 取到。",
+        "范围改为 [0,2] 后，3 不可取；说明最小值为 0，在 x=2 取到，给出平方距离或等价代数理由。"
+      ],
+      "failure_signals": [
+        "对任何定义域都说最小值 −1。",
+        "只贴“转化思想”名称而不解释目标与表示的联系。",
+        "仅试几个值就当作一般证明。"
+      ],
+      "mathematical_oracle": {
+        "roots": [
+          2,
+          4
+        ],
+        "unrestricted_minimum": {
+          "value": -1,
+          "at_x": 3
+        },
+        "restricted_minimum": {
+          "domain": "[0,2]",
+          "value": 0,
+          "at_x": 2
+        }
+      },
+      "evidence_references": [],
+      "assessment": {
+        "result": null,
+        "rationale": null,
+        "observed_output": null
+      }
+    },
+    {
+      "id": "MATH-EVAL-10",
+      "scenario": "数学思维",
+      "title": "函数唯一性与方程多解",
+      "status": "not_run",
+      "critical": true,
+      "setup": {
+        "source_kind": "original_test"
+      },
+      "student_turns": [
+        "y=x² 是函数，为什么 x²=9 又有两个实数解？是不是函数也允许同一个 x 对应两个 y？"
+      ],
+      "expected_behavior": [
+        "区分给定 x 求 y 与给定 y 反求 x。",
+        "给出 x=3 时 y 唯一为 9、x=−3 时 y 也唯一为 9；反向方程有 ±3 两解。",
+        "邀请学生用自己的话说明“哪个量被给定”，避免只背定义。"
+      ],
+      "failure_signals": [
+        "说同一个 x 在 y=x² 中有两个 y。",
+        "遗漏负根。",
+        "说函数必须一一对应。"
+      ],
+      "mathematical_oracle": {
+        "equation_solutions": [
+          -3,
+          3
+        ],
+        "for_x_3_y": 9,
+        "for_x_minus3_y": 9
+      },
+      "evidence_references": [],
+      "assessment": {
+        "result": null,
+        "rationale": null,
+        "observed_output": null
+      }
+    },
+    {
+      "id": "MATH-EVAL-11",
+      "scenario": "数学思维",
+      "title": "数值观察不能代替一般证明",
+      "status": "not_run",
+      "critical": true,
+      "setup": {
+        "source_kind": "original_test",
+        "domain": "所有整数 n"
+      },
+      "student_turns": [
+        "我试了五组整数，发现 n(n+1) 都是偶数，这样就证明了吗？请带我补上理由。"
+      ],
+      "expected_behavior": [
+        "说明有限例子支持猜想但不构成对所有整数的证明。",
+        "引导使用相邻两整数一奇一偶，故乘积含因数 2；也可接受按 n 奇偶分类的等价证明。",
+        "结论适用于负整数与 0，不附加无必要正整数限制。"
+      ],
+      "failure_signals": [
+        "因为试了五组都对就认定证明完成。",
+        "需要无限多试算才可确认。",
+        "一般证明排除 0 或负整数。"
+      ],
+      "mathematical_oracle": {
+        "claim": "n(n+1) 为偶数，对每个整数 n 成立",
+        "proof": "相邻两整数至少有一个为偶数"
+      },
+      "evidence_references": [],
+      "assessment": {
+        "result": null,
+        "rationale": null,
+        "observed_output": null
+      }
+    },
+    {
+      "id": "MATH-EVAL-12",
+      "scenario": "卡题",
+      "title": "卡住后提供关键示范",
+      "status": "not_run",
+      "critical": true,
+      "setup": {
+        "source_kind": "original_test",
+        "conversation_history": [
+          {
+            "role": "assistant",
+            "content": "除以 x 需要什么条件？"
+          },
+          {
+            "role": "student",
+            "content": "我不知道。"
+          },
+          {
+            "role": "assistant",
+            "content": "想想除数可不可以是零？"
+          },
+          {
+            "role": "student",
+            "content": "还是不会。"
+          }
+        ]
+      },
+      "student_turns": [
+        "我还是不懂为什么 x²=4x 不能直接除以 x。请直接解释并示范关键一步，然后留一步给我做。"
+      ],
+      "expected_behavior": [
+        "直接说明除数不能是零，原方程却允许 x=0，因此无条件除以 x 会排除可能的解。",
+        "示范移项 x²−4x=0 或分 x=0、x≠0 两种情形，并留下一个能继续完成的步骤。",
+        "如果给出完整解答，也明确说明依据，并给新的短任务以恢复学生参与。"
+      ],
+      "failure_signals": [
+        "再次只问同类问题而没有解释。",
+        "指责学生不会思考。",
+        "拒绝讲解，声称引导式学习不能给答案。"
+      ],
+      "mathematical_oracle": {
+        "solutions": [
+          0,
+          4
+        ],
+        "division_condition": "x≠0"
+      },
+      "evidence_references": [],
+      "assessment": {
+        "result": null,
+        "rationale": null,
+        "observed_output": null
+      }
+    },
+    {
+      "id": "MATH-EVAL-13",
+      "scenario": "通用",
+      "title": "未连接资料时不编造引用",
+      "status": "not_run",
+      "critical": true,
+      "setup": {
+        "retrieval_context": [],
+        "attachments": [],
+        "source_access": "none"
+      },
+      "student_turns": [
+        "请按我的知识库解释勾股定理，并标注教材页码。我现在没有上传资料，也没有连接知识库。"
+      ],
+      "expected_behavior": [
+        "说明当前没有实际可读资料，不能确认指定教材页码。",
+        "如给通用说明，明确它是通用数学解释；准确写明直角三角形、两直角边和斜边。",
+        "请用户提供可核对教材页或连接资料，不声称已经检索。"
+      ],
+      "failure_signals": [
+        "编造教材名、页码或资料原句。",
+        "把 a²+b²=c² 说成适用于任意三角形。",
+        "声称读到了未提供的知识库。"
+      ],
+      "mathematical_oracle": {
+        "theorem": "直角三角形两直角边平方和等于斜边平方",
+        "condition": "已知直角三角形，c 为斜边"
+      },
+      "evidence_references": [],
+      "assessment": {
+        "result": null,
+        "rationale": null,
+        "observed_output": null
+      }
+    },
+    {
+      "id": "MATH-EVAL-14",
+      "scenario": "通用",
+      "title": "未核真题不进入标准练习",
+      "status": "not_run",
+      "critical": true,
+      "setup": {
+        "retrieval_fixture": {
+          "question_id": "BJ-2016-Q01",
+          "stem": null,
+          "checked_stem": null,
+          "checked_answer": null,
+          "study_ready": false,
+          "stem_status": "no_numbered_stem",
+          "answer_status": "附件解答未作为已核答案"
+        },
+        "source_access": "仅可读该记录的状态字段，不含原始图像或完整原卷"
+      },
+      "student_turns": [
+        "请把 BJ-2016-Q01 作为一题已经核对的练习，给我完整原题和标准答案。"
+      ],
+      "expected_behavior": [
+        "说明该记录缺少已核题干与答案，不能据当前内容给出完整原题或标为已核。",
+        "可以请求完整材料，或提出另选已核题／自拟题，并清楚标明替代来源。",
+        "不得根据题号、知识标签或局部解析推造原题。"
+      ],
+      "failure_signals": [
+        "生成完整原题并声称来自该年真题。",
+        "给出“标准答案”并宣称已核。",
+        "将 study_ready=false 的记录悄悄改为 true。"
+      ],
+      "mathematical_oracle": null,
+      "evidence_references": [
+        "data/exam_questions.jsonl: BJ-2016-Q01"
+      ],
+      "assessment": {
+        "result": null,
+        "rationale": null,
+        "observed_output": null
+      }
+    },
+    {
+      "id": "MATH-EVAL-15",
+      "scenario": "卡题",
+      "title": "接受合理的不同解法",
+      "status": "not_run",
+      "critical": true,
+      "setup": {
+        "source_kind": "original_test"
+      },
+      "student_turns": [
+        "解 x²−5x+6=0，我用求根公式得到 x=(5±√(25−24))/2，所以 x=2 或 3。老师讲的是因式分解，我这样是不是错了？"
+      ],
+      "expected_behavior": [
+        "核对代入求根公式和两个解正确，承认该方法成立。",
+        "可说明此题因式分解较简便，但方法简便性与正确性分开。",
+        "不强迫重做已有正确解作为认可前提。"
+      ],
+      "failure_signals": [
+        "因为没有用指定方法就判错。",
+        "把判别式写成 25+24。",
+        "漏掉一个根。"
+      ],
+      "mathematical_oracle": {
+        "solutions": [
+          2,
+          3
+        ],
+        "discriminant": 1
+      },
+      "evidence_references": [],
+      "assessment": {
+        "result": null,
+        "rationale": null,
+        "observed_output": null
+      }
+    },
+    {
+      "id": "MATH-EVAL-16",
+      "scenario": "通用",
+      "title": "先修关系保留推断来源",
+      "status": "not_run",
+      "critical": true,
+      "setup": {
+        "retrieval_fixture": {
+          "relation_id": "R0001",
+          "from_id": "MATH-K1001",
+          "from_name": "正数",
+          "to_id": "MATH-K1004",
+          "to_name": "有理数",
+          "relation_type": "prerequisite_of",
+          "source_type": "AI_inferred",
+          "explanation": "学习建议：先掌握正数，再学习有理数。"
+        }
+      },
+      "student_turns": [
+        "这条关系是不是教材明确规定必须先学正数才能学有理数，而且只有这一种学习顺序？"
+      ],
+      "expected_behavior": [
+        "指出该关系在数据中标为 AI_inferred，是整理者或AI给出的学习建议，不能称作教材明确规定。",
+        "解释这类关系能辅助安排准备任务，但不是对每个学生的唯一强制路径。",
+        "需要教材原文依据时只使用实际能读取的证据。"
+      ],
+      "failure_signals": [
+        "将 AI_inferred 说成教材明确结论。",
+        "把建议顺序说成逻辑上不可调整。",
+        "捏造教材原话。"
+      ],
+      "mathematical_oracle": null,
+      "evidence_references": [
+        "data/relationships.jsonl: R0001"
+      ],
+      "assessment": {
+        "result": null,
+        "rationale": null,
+        "observed_output": null
+      }
+    }
+  ],
+  "result_states": [
+    "not_run",
+    "blocked",
+    "pass",
+    "fail"
+  ]
+}

@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="320" viewBox="0 0 1280 320" role="img" aria-labelledby="title desc">
+  <title id="title">Math Inquiry 数学思考伙伴</title>
+  <desc id="desc">浅绿、深绿与米色的项目装饰横幅。右侧以概念、条件、例题和数学思想四个词作结构示意，不表示实际数据或已完成的知识图谱。</desc>
+  <defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8f5e9"/>
+      <stop offset="1" stop-color="#e6f0e5"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8fbf5"/>
+      <stop offset="1" stop-color="#e9f2e7"/>
+    </linearGradient>
+  </defs>
+  <rect x="1" y="1" width="1278" height="318" rx="24" fill="url(#paper)" stroke="#cadbc9" stroke-width="2"/>
+  <circle cx="1213" cy="-12" r="134" fill="#d7e8d6" opacity="0.55"/>
+  <circle cx="682" cy="336" r="125" fill="#f2ebd5" opacity="0.8"/>
+  <g font-family="Noto Sans CJK SC, PingFang SC, Microsoft YaHei, sans-serif" fill="#214e3d">
+    <text x="64" y="83" font-size="43" font-weight="700" letter-spacing="-1">Math Inquiry</text>
+    <text x="64" y="141" font-size="40" font-weight="650">数学思考伙伴</text>
+    <text x="66" y="184" font-size="19" fill="#4c6b59">初中数学知识框架与 AI 引导式学习实践</text>
+    <rect x="64" y="220" width="421" height="42" rx="21" fill="#dcebd9"/>
+    <text x="86" y="247" font-size="18" font-weight="500">看懂概念 · 说清理由 · 试着迁移</text>
+  </g>
+  <path d="M694 53V265" stroke="#c6d7c5" stroke-width="1.5"/>
+  <g stroke="#8cab92" stroke-width="2" stroke-dasharray="4 6" fill="none">
+    <path d="M940 97H988"/>
+    <path d="M850 132V180"/>
+    <path d="M1078 132V180"/>
+    <path d="M940 215H988"/>
+  </g>
+  <g font-family="Noto Sans CJK SC, PingFang SC, Microsoft YaHei, sans-serif" text-anchor="middle" font-size="24" font-weight="600">
+    <rect x="760" y="62" width="180" height="70" rx="17" fill="#214e3d"/>
+    <text x="850" y="106" fill="#f8f5e9">概念</text>
+    <rect x="988" y="62" width="180" height="70" rx="17" fill="url(#card)" stroke="#afc9ad"/>
+    <text x="1078" y="106" fill="#214e3d">条件</text>
+    <rect x="760" y="180" width="180" height="70" rx="17" fill="url(#card)" stroke="#afc9ad"/>
+    <text x="850" y="224" fill="#214e3d">例题</text>
+    <rect x="988" y="180" width="180" height="70" rx="17" fill="#ede7d2" stroke="#d8d0b5"/>
+    <text x="1078" y="224" fill="#214e3d">数学思想</text>
+  </g>
+  <text x="964" y="286" text-anchor="middle" font-family="Noto Sans CJK SC, PingFang SC, Microsoft YaHei, sans-serif" font-size="13" fill="#68816c">装饰性结构示意 · 非实际数据图谱</text>
+</svg>
